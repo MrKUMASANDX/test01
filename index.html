@@ -1,0 +1,236 @@
+<!DOCTYPE html> <!-- HTML5であることを宣言 -->
+<html lang="ja"> <!-- 日本語のページであることを指定 -->
+<head>
+  <meta charset="UTF-8"> <!-- 文字コードをUTF-8に設定（日本語対応） -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- スマホでも見やすくする設定 -->
+  <title>自己紹介サイト</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f4f4f4;
+      color: #333;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark {
+      background-color: #222;
+      color: #eee;
+    }
+
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    nav {
+      background-color: #333;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      border-radius: 10px;
+      margin-top: 20px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s;
+    }
+
+    .container.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    img {
+      width: 100%; /* 画像をコンテナ幅に合わせる */
+      border-radius: 10px; /* 角を丸く */
+      margin-top: 10px;
+      cursor: pointer; /* クリックできることを示す */
+      transition: opacity 0.5s; /* ←これを追加（ふわっと変化） */
+    }
+
+    .fade-out {
+        opacity: 0; /* 透明にする */
+    }
+
+    h2 {
+      border-bottom: 2px solid #4CAF50;
+      padding-bottom: 5px;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      margin-top: 20px;
+      background-color: #333;
+      color: white;
+    }
+
+    /* OFF状態（デフォルト） */
+    #slideBtn { background-color: #888; color: white; }
+
+    /* ON状態 */
+    #slideBtn.active { background-color: #4CAF50; }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>私の自己紹介サイト</h1>
+    <p>ようこそ！</p>
+    <button onclick="toggleDarkMode()">ダークモード切替</button>
+  </header>
+
+  <nav>
+    <a href="#about">自己紹介</a>
+    <a href="#hobby">趣味</a>
+    <a href="#contact">連絡先</a>
+  </nav>
+
+  <div class="container" id="about">
+    <h2>自己紹介</h2>
+    <p>こんにちは！私はフィッシュバーガーです。</p>
+    <p>いろんなところでで販売されています。</p>
+
+    <!-- クリックで画像が変わる -->
+    <img id="profileImage" src="profileImage.jpg" onclick="changeImage()"> <!-- クリックイベント -->
+
+    <button onclick="showMessage()">クリックしてみて</button>
+
+    <button onclick="toggleSlideshow()" id="slideBtn">自動再生 OFF</button>
+    <div class="status" id="statusText">現在の状態：停止中</div>
+  </div>
+
+  <div class="container" id="hobby">
+    <h2>内訳</h2>
+    <ul>
+      <li>マヨネーズ</li>
+      <li>フィッシュフライ</li>
+      <li>チーズ/オニオン/アメマス</li>
+    </ul>
+  </div>
+
+  <div class="container" id="contact">
+    <h2>連絡先</h2>
+    <p>Email: fishbagar@hanbager.com</p>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 私のサイト</p>
+  </footer>
+
+
+
+  <script>
+
+    function showMessage() {
+      alert("まずはたべてみてください");
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+    }
+
+    const containers = document.querySelectorAll('.container');
+
+    function revealOnScroll() {
+      const triggerBottom = window.innerHeight * 0.8;
+
+      containers.forEach(container => {
+        const boxTop = container.getBoundingClientRect().top;
+
+        if (boxTop < triggerBottom) {
+          container.classList.add('show');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', revealOnScroll);
+    revealOnScroll();
+
+    // 画像切り替え用
+    const images = [
+    "https://www.mcdonalds.co.jp/product_images/1110/FOF.png?20260325095932",
+    
+    "https://assets.komeda.co.jp/eos/menu/23163.jpg",
+    "https://images.keizai.biz/shibukei/headline/1730782232_photo.jpg",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS03ykvjkbakwS1bYCvF4TvFQk9QHCRVZDgzg&s",
+    "https://www.burgerking.co.jp/images/menu/web/main/2025/05/29/e7a169a4-4e7c-43b6-a321-6785b72c0c46.png"
+    ];
+
+    let currentImage = 0; // 今表示している画像の番号
+
+    function changeImage() {
+        const img = document.getElementById("profileImage");
+
+        img.classList.add("fade-out"); // いったん消す
+
+        setTimeout(() => {
+          currentImage = (currentImage + 1) % images.length;
+         img.src = images[currentImage]; // 画像を変更
+        img.classList.remove("fade-out"); // 元に戻す（＝ふわっと表示）
+    }, 500); // CSSの0.5秒と合わせる
+    }
+
+    // 3秒ごとに画像を切り替え
+    let slideshow = null;
+
+    function toggleSlideshow() {
+      const btn = document.getElementById("slideBtn");
+      const status = document.getElementById("statusText");
+
+      if (slideshow) {
+        clearInterval(slideshow);
+        slideshow = null;
+        btn.textContent = "自動再生 OFF";
+        btn.classList.remove("active"); // 色をOFFに戻す
+        status.textContent = "現在の状態：停止中";
+      } else {
+        slideshow = setInterval(changeImage, 3000);
+        btn.textContent = "自動再生 ON";
+        btn.classList.add("active"); // 色をONに変更
+        status.textContent = "現在の状態：再生中";
+      }
+    }
+
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['10代', '20代', '30代', '40代', '50代以上'],
+        datasets: [{
+        label: '購入率 (%)',
+        data: [35, 50, 45, 30, 20]
+        }]
+    }
+    });
+  </script>
+
+</body>
+</html>
